@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,7 @@ STATIC_URL = '/static/'
 # Cookie names
 SESSION_COOKIE_NAME = 'trygoogle-sessionid'
 CSRF_COOKIE_NAME = 'try-google-csrf'
+
+GRAPHENE = {
+    'SCHEMA': 'backend.schema.schema'
+}
