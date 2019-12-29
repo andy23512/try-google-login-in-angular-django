@@ -118,3 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Cookie names
+SESSION_COOKIE_NAME = 'trygoogle-sessionid'
+CSRF_COOKIE_NAME = 'try-google-csrf'
