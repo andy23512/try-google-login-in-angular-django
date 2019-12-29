@@ -4,7 +4,11 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HttpClient,
+  HttpClientXsrfModule
+} from '@angular/common/http';
 
 export function getCsrfToken(http: HttpClient) {
   return () => http.get('/api/csrf').toPromise();
@@ -12,7 +16,16 @@ export function getCsrfToken(http: HttpClient) {
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, GraphQLModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    GraphQLModule,
+    HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'try-google-csrf',
+      headerName: 'X-CSRFToken'
+    })
+  ],
   providers: [
     {
       provide: APP_INITIALIZER,
