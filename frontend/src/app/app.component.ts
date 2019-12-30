@@ -4,6 +4,8 @@ import {
   GoogleLoginProvider,
   SocialUser
 } from 'angularx-social-login';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,7 @@ export class AppComponent implements OnInit {
   private user: SocialUser;
   private loggedIn: boolean;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private apollo: Apollo) {}
 
   signInWithGoogle(): void {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -30,6 +32,23 @@ export class AppComponent implements OnInit {
       console.log(user);
       this.user = user;
       this.loggedIn = user != null;
+      this.apollo
+        .mutate({
+          mutation: gql`
+            mutation SocialAuth($accessToken: String!) {
+              socialAuth(accessToken: $accessToken, provider: "google-oauth2") {
+                social {
+                  uid
+                }
+                token
+              }
+            }
+          `,
+          variables: {
+            accessToken: user.authToken
+          }
+        })
+        .subscribe(console.log);
     });
   }
 }

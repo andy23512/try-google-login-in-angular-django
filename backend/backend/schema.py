@@ -1,4 +1,5 @@
 from graphene import ObjectType, Schema, String
+from graphql_social_auth import SocialAuthJWT
 
 
 class Query(ObjectType):
@@ -14,4 +15,8 @@ class Query(ObjectType):
         return 'See ya!'
 
 
-schema = Schema(query=Query)
+class Mutation(ObjectType):
+    social_auth = SocialAuthJWT.Field()
+
+
+schema = Schema(query=Query, mutation=Mutation)
