@@ -15,15 +15,17 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
-from .views import csrf
+from .views import csrf, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('csrf', csrf),
+    path('index', index),
     path('graphql', GraphQLView.as_view(graphiql=False), name='graphql'),
+    path('', include('social_django.urls', namespace='social'))
 ]
 
 if settings.DEBUG:
