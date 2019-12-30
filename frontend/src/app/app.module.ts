@@ -9,9 +9,34 @@ import {
   HttpClient,
   HttpClientXsrfModule
 } from '@angular/common/http';
+import {
+  SocialLoginModule,
+  AuthServiceConfig,
+  GoogleLoginProvider
+} from 'angularx-social-login';
+import { tap } from 'rxjs/operators';
 
-export function getCsrfToken(http: HttpClient) {
-  return () => http.get('/api/csrf').toPromise();
+let googleClientId;
+
+export function getAuthSettings(http: HttpClient) {
+  return () =>
+    http
+      .get('/api/get_auth_setting')
+      .pipe(
+        tap(
+          (authSettings: any) => (googleClientId = authSettings.googleClientId)
+        )
+      )
+      .toPromise();
+}
+
+export function provideConfig() {
+  return new AuthServiceConfig([
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(googleClientId)
+    }
+  ]);
 }
 
 @NgModule({
@@ -24,14 +49,19 @@ export function getCsrfToken(http: HttpClient) {
     HttpClientXsrfModule.withOptions({
       cookieName: 'try-google-csrf',
       headerName: 'X-CSRFToken'
-    })
+    }),
+    SocialLoginModule
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: getCsrfToken,
+      useFactory: getAuthSettings,
       multi: true,
       deps: [HttpClient]
+    },
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
     }
   ],
   bootstrap: [AppComponent]

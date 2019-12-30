@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.csrf import csrf_exempt
 from graphene_django.views import GraphQLView
-from .views import csrf, index
+from .views import get_auth_setting, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('csrf', csrf),
+    path('get_auth_setting', get_auth_setting),
     path('index', index),
     path('graphql', GraphQLView.as_view(graphiql=False), name='graphql'),
     path('', include('social_django.urls', namespace='social'))
